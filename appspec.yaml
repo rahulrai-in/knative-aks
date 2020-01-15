@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kn-app
+  labels:
+    knative-eventing-injection: enabled
+    istio-injection: enabled
+---
+apiVersion: sources.eventing.knative.dev/v1alpha1
+kind: ContainerSource
+metadata:
+  name: hello-orchestrator
+  namespace: kn-app
+spec:
+  image: rahulrai/hello-orchestrator
+  env:
+   - name: StorageConnectionString
+     value: "DefaultEndpointsProtocol=https;AccountName={ACC_Name};AccountKey={ACC_KEY};EndpointSuffix=core.windows.net"
+   - name: TaskHubName
+     value: "DTFHub"
+   - name: DurationInSeconds
+     value: "10"
+  sink:
+    apiVersion: serving.knative.dev/v1alpha1
+    kind: Service
+    name: hello-events
+    namespace: kn-app
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: hello-events
+  namespace: kn-app
+spec:
+  template:
+    spec:
+      containers:
+        - image: rahulrai/hello-events
+          ports:
+            - name: http1
+              containerPort: 80

@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Hello-Orchestrator": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "StorageConnectionString": "UseDevelopmentStorage=true",
+        "TaskHubName": "DTFHub4",
+        "SINK": "http://webhook.site/{USED FOR STANDALONE TESTS}"
+      }
+    }
+  }
+}
